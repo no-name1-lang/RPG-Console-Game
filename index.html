@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>ПГУАС — Поступай дерзко | Аризона RP варианты</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a2a3b 0%, #0e3a4f 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', 'Roboto', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+            padding: 16px;
+        }
+
+        .game-container {
+            max-width: 700px;
+            width: 100%;
+            margin: 0 auto;
+            background: linear-gradient(145deg, #eef4fc 0%, #e2eaf5 100%);
+            border-radius: 48px;
+            box-shadow: 0 20px 35px rgba(0, 20, 40, 0.3), inset 0 1px 2px rgba(255,255,255,0.6);
+            overflow: hidden;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(72, 149, 207, 0.3);
+        }
+
+        .hero {
+            background: linear-gradient(105deg, #0a314b, #124e74);
+            padding: 20px 20px;
+            color: #eef5ff;
+            text-align: center;
+            border-bottom: 3px solid #7ab3c8;
+        }
+
+        .hero h1 {
+            font-size: 1.9rem;
+            letter-spacing: -0.5px;
+            font-weight: 800;
+            text-shadow: 2px 2px 0 #051f30;
+            word-break: break-word;
+        }
+
+        .hero p {
+            font-size: 0.85rem;
+            margin-top: 8px;
+            opacity: 0.9;
+        }
+
+        .direction-card {
+            background: #ffffffcc;
+            backdrop-filter: blur(2px);
+            margin: 18px 16px 0 16px;
+            border-radius: 32px;
+            padding: 16px 18px;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.05);
+            border: 1px solid #c7dfef;
+        }
+
+        .direction-card h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.25rem;
+            border-left: 5px solid #1f75a8;
+            padding-left: 14px;
+            margin-bottom: 14px;
+            color: #0a3f5a;
+        }
+
+        .spec-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .spec-item {
+            background: white;
+            border-radius: 40px;
+            padding: 8px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #cde2f0;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        .spec-item:active { transform: scale(0.98); background: #eef3fc; }
+
+        .spec-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #134b6b;
+        }
+
+        .spec-score {
+            background: #1b6b93;
+            color: #eef9ff;
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background: #2a7faa;
+            border: none;
+            font-weight: bold;
+            font-size: 1.05rem;
+            padding: 14px 18px;
+            border-radius: 60px;
+            width: calc(100% - 32px);
+            margin: 18px 16px;
+            cursor: pointer;
+            transition: 0.15s;
+            font-family: inherit;
+            box-shadow: 0 5px 0 #0e4a66;
+            color: white;
+            text-align: center;
+        }
+        .btn-primary:active { transform: translateY(2px); box-shadow: 0 2px 0 #0e4a66; }
+
+        .exam-panel {
+            padding: 16px;
+            background: #f7fafd;
+            border-radius: 36px;
+            margin: 12px;
+        }
+
+        .question-card {
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 18px 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.03);
+            border: 1px solid #cce3f0;
+        }
+
+        .question-text {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 16px;
+            color: #0c4969;
+            line-height: 1.4;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #f1f7fc;
+            padding: 10px 16px;
+            border-radius: 100px;
+            cursor: pointer;
+            transition: 0.1s;
+            border: 1px solid #bed6e8;
+        }
+        .option:hover { background: #e3f0f9; }
+
+        input[type="radio"] { width: 18px; height: 18px; accent-color: #1a73a5; }
+        .text-answer {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 60px;
+            border: 1px solid #8cb9d4;
+            font-size: 1rem;
+            background: white;
+            font-family: monospace;
+        }
+        .text-answer:focus { outline: none; border-color: #2a7faa; box-shadow: 0 0 0 2px #9bc6e0; }
+
+        .next-exam-btn {
+            background: #1f6d93;
+            color: white;
+            padding: 12px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 60px;
+            width: 100%;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 12px;
+        }
+
+        .info-badge {
+            background: #d9e9f5;
+            padding: 12px 16px;
+            border-radius: 48px;
+            margin: 12px 20px;
+            text-align: center;
+            font-size: 0.78rem;
+            color: #155e7b;
+            font-weight: 500;
+        }
+
+        .result-area {
+            background: #e2eff9;
+            margin: 20px;
+            border-radius: 36px;
+            padding: 20px 18px;
+            text-align: center;
+            font-weight: bold;
+            color: #103d56;
+            border: 1px solid #bbd6ea;
+        }
+
+        .desc-page {
+            background: #fefef7;
+            margin: 16px;
+            border-radius: 36px;
+            padding: 24px;
+            color: #1f4a6e;
+        }
+        .desc-page h2 { color: #0f5b83; margin-bottom: 12px; }
+        .desc-page p { line-height: 1.5; margin-bottom: 16px; }
+
+        footer {
+            text-align: center;
+            font-size: 0.7rem;
+            padding: 14px;
+            color: #3f6d89;
+        }
+
+        @media (max-width: 550px) {
+            .game-container { border-radius: 36px; }
+            .hero h1 { font-size: 1.6rem; }
+            .spec-item { flex-direction: column; align-items: flex-start; gap: 6px; }
+            .spec-score { align-self: flex-start; }
+            .question-text { font-size: 0.95rem; }
+            .option { padding: 8px 12px; font-size: 0.85rem; }
+        }
+        .back-btn {
+            background: #688e9e;
+            margin: 10px 16px;
+            width: calc(100% - 32px);
+        }
+        .variant-badge {
+            background: #2c6e8f;
+            color: white;
+            font-size: 0.7rem;
+            border-radius: 20px;
+            padding: 4px 12px;
+            display: inline-block;
+            margin-top: 6px;
+        }
+    </style>
+</head>
+<body>
+<div class="game-container" id="gameRoot"></div>
+
+<script>
+    // ==================== НАПРАВЛЕНИЯ С ОПИСАНИЯМИ ====================
+    const SPECIALTIES = [
+        { 
+            name: "1.4.88. Крышедельная инженерия", 
+            score: 160,
+            description: "🏗️ Крышедельная инженерия — это прикладная наука о том, как легально, полулегально и эффектно нависать над окружающими, обеспечивая себе и своим «бригадам» полную защиту от атмосферных осадков (в виде ментов, конкурентов и совести). В отличие от кровельщика-классика, который кладет шифер, крышедельный инженер кладет на всё остальное. Объект исследования — не просто верхняя часть здания, а вся вертикаль власти, которую можно «накрыть» своим авторитетом."
+        },
+        { 
+            name: "2.2.8. Прикладаное БОРЗОВЕДЕНИЕ", 
+            score: 180,
+            description: "🐺 Прикладное борзоведение — это не просто умение нахамить в очереди. Это инженерная дисциплина о том, как рассчитать, спроектировать и реализовать акт запредельной наглости в условиях ограниченного ресурса (времени, совести, свободы). Если теоретическое борзоведение отвечает на вопрос «Почему это борзо?», то прикладное — на вопрос «Как это сделать борзо, технически грамотно и с минимальными последствиями для лица?»"
+        },
+        { 
+            name: "2.23.0.1 Борзые технологии и теория казино", 
+            score: 145,
+            description: "🎲 «Борзые технологии и теория казино» — это междисциплинарная область знаний, изучающая, как сделать так, чтобы рулетка крутилась в вашу сторону даже когда шарик уже упал. В основе курса лежит парадокс Аризоны: «Если ты не знаешь правил, то почему бы им не быть твоими? А если кто-то против — у него просто выпала единица критического урона по чакре \"совесть\"». Это не просто наглость. Это квантовая наглость: ваше состояние меняется в зависимости от того, смотрит ли на вас админ (модератор реальности) или нет."
+        },
+        { 
+            name: "1.02.32. Баранистика", 
+            score: 120,
+            description: "🐑 Баранистика — это фундаментальная наука о том, как человек (Homo oviceps, или Человек Барановидный) упорно, красиво и с музыкальным сопровождением бьется лбом об одни и те же обстоятельства, искренне веря, что в 137-й раз получится иначе. В отличие от борзоведения (где вы сознательно нарушаете правила), баранизм — это состояние души, при котором правила сами находят вас в темном переулке и бьют больнее всего, но вы все равно идете туда снова. Здесь готовят борзых специалистов, которые стоят до конца, особенно если они не правы."
+        },
+        { 
+            name: "1.0.23.1 Прикладное аризонаведение", 
+            score: 190,
+            description: "🌵 «Прикладное аризонаведение» — это наука о том, как жить, побеждать и размножаться внутри игровой логики Аризона РП, полностью отказавшись от «скучной реальности» с её законами физики, уголовным кодексом и совестью. Если базовое аризонаведение учит использовать /me и /try, то прикладное учит переписывать скрипты реальности в реальном времени, банить оппонентов из жизни и создавать собственные игровые миры, где вы — единственный сценарист."
+        }
+    ];
+
+    // ========== ТРИ ВАРИАНТА ЭКЗАМЕНА ПО АРИЗОНАВЕДЕНИЮ ==========
+    // Вариант 1 (оригинальный, слегка обновлён)
+    const ARIZONA_V1_PART1 = [
+        { text: "Что означает аббревиатура \"RP\" в названии \"Arizona RP\"?", options: ["Real Players", "Role Play", "Russian project", "Random People"], correct: 1 },
+        { text: "В каком году был создана игра \"Arizona RP\"?", options: ["2012","2015","2018","2020"], correct: 2 },
+        { text: "Какой город является виртуальной столицей \"Arizona RP\"?", options: ["Los Santos","Vice city","Liberty city","San Fierro"], correct: 1 },
+        { text: "Что игроки получают за ежедневный вход в \"Arizona RP\"?", options: ["Оружие","Бонусные деньги","Новую машину","Скидку на донат"], correct: 1 },
+        { text: "Как называется валюта в \"Arizona RP\"?", options: ["Доллары","Рубли","Монеты","АЗ коины"], correct: 3 },
+        { text: "Сколько фракций доступно для вступления в базовой версии?", options: ["5","8","10","12"], correct: 1 },
+        { text: "Какой самый редкий автомобиль в \"Arizona RP\"?", options: ["Buffalo","Infernus","Пони","Admiral"], correct: 2 },
+        { text: "Какой уровень нужен для открытия казино Vice City?", options: ["10","20","30","50"], correct: 2 },
+        { text: "Что происходит при смерти персонажа?", options: ["Персонаж удаляется","Теряешь часть денег и возвращаешься в больницу","Понижение уровня","Бан на 1 час"], correct: 1 },
+        { text: "Как называется подземелье для фарма?", options: ["Лос антос дамп","Vice city sewers","Arizona bunker","San Fierro tunnel"], correct: 2 },
+        { text: "Максимальный уровень персонажа?", options: ["50","100","150","200"], correct: 3 },
+        { text: "Как часто проходят ивенты?", options: ["Каждый час","Каждые 3 часа","Раз в день","Раз в неделю"], correct: 1 },
+        { text: "Какой предмет нельзя скрафтить?", options: ["Аптечка","Лом","Бронежилет","Ключ от казино"], correct: 3 },
+        { text: "Где находится секретный магазин оружия?", options: ["В порту","Под мостом","В подвале закусочной","На свалке"], correct: 2 },
+        { text: "Какая комбинация клавиш открывает меню эмоций?", options: ["/emote","/anim","/me","/action"], correct: 1 }
+    ];
+    const ARIZONA_V1_PART2 = [
+        { text: "Напишите полную команду для вызова меню создания группы в \"Arizona RP\"?", correctAnswer: "/create group" },
+        { text: "Как называется событие, когда все игроки получают двойной опыт в течении 2 часов?", correctAnswer: "happy hour" },
+        { text: "Введите id предмета аптечка в инвентаре?", correctAnswer: "203" },
+        { text: "Минимальная сумма для покупки самого дешевого дома в Vice City (только число)?", correctAnswer: "25000" },
+        { text: "Точное название задания (квеста) за которое дают наклейку \"Arizona OG\"?", correctAnswer: "legacy of vice" }
+    ];
+
+    // Вариант 2 — новые вопросы про механику, донат, фракции
+    const ARIZONA_V2_PART1 = [
+        { text: "Как называется главная фракция полиции в Arizona RP?", options: ["LSPD","BCSO","VCPD","FBI"], correct: 2 },
+        { text: "Какой транспорт можно купить за внутриигровую валюту, не используя донат?", options: ["Hydra","Пони","Infernus","Buffalo"], correct: 1 },
+        { text: "Что дает донатный статус \"Премиум\" в Arizona RP?", options: ["Увеличение опыта","Личный транспорт","Доступ к командам /fix, /heal","Бессмертие"], correct: 2 },
+        { text: "Сколько максимально игроков может быть в одной группе (банде/семье)?", options: ["10","15","20","25"], correct: 2 },
+        { text: "Какой командой открывается инвентарь?", options: ["/inv","/bag","/inventory","/backpack"], correct: 0 },
+        { text: "Где находится квестовый NPC на ежедневные задания?", options: ["В порту","На пляже","В парке Вайс-Сити","В аэропорту"], correct: 2 },
+        { text: "Какой максимальный уровень прокачки оружия?", options: ["5","7","10","12"], correct: 2 },
+        { text: "Что происходит при накоплении 1000 единиц опыта?", options: ["Повышение уровня","Выдаётся скин","Бонусные монеты","Открывается новая способность"], correct: 0 },
+        { text: "Какая фракция занимается перевозкой заключенных?", options: ["SWAT","Дорожная полиция","Тюремная служба","Национальная гвардия"], correct: 2 },
+        { text: "Какой самый дорогой дом в игре (в базовой версии)?", options: ["Вилла на острове","Пентхаус в центре","Особняк СанФиерро","Бункер в пустыне"], correct: 0 },
+        { text: "Сколько стоит разблокировка казино в донате?", options: ["500 монет","1000 монет","1500 монет","Бесплатно на 30 лвл"], correct: 3 },
+        { text: "Какая команда используется для создания собственного радио?", options: ["/radio create","/radio new","/radiostart","/playlist"], correct: 0 },
+        { text: "Какой вид спорта можно тренировать в спортзале?", options: ["Бег","Ударная сила","Выносливость","Все варианты"], correct: 3 },
+        { text: "Как часто начисляются бонусные АЗ коины за онлайн?", options: ["Каждые 15 мин","Каждые 30 мин","Каждый час","Каждые 2 часа"], correct: 1 },
+        { text: "Где находится секретный подпольный бойцовский клуб?", options: ["В подвале бара","На свалке","В портовых складах","Под мостом"], correct: 2 }
+    ];
+    const ARIZONA_V2_PART2 = [
+        { text: "Напишите ID предмета \"Лом\" в инвентаре Arizona RP?", correctAnswer: "101" },
+        { text: "Как называется событие, где нужно защищать грузовик с артефактами?", correctAnswer: "convoy" },
+        { text: "Минимальный уровень для вступления в мафию \"Коза Ностра\"?", correctAnswer: "25" },
+        { text: "Точная команда для проверки ping в игре", correctAnswer: "/ping" },
+        { text: "Сколько максимально уровней в игре (число)?", correctAnswer: "200" }
+    ];
+
+    // Вариант 3 — про криминал, бизнес и уникальные места
+    const ARIZONA_V3_PART1 = [
+        { text: "Что дает бизнес \"Автомойка\" владельцу?", options: ["Пассивный доход","Скидка на ремонт","Приоритет в очереди","Бесплатная покраска"], correct: 0 },
+        { text: "Какая фракция контролирует порт в Arizona RP?", options: ["Мафия","Полиция","ЧВК","Торговый синдикат"], correct: 3 },
+        { text: "Какой наркотик можно синтезировать в лаборатории?", options: ["Метамфетамин","Кокаин","Марихуана","Экстази"], correct: 0 },
+        { text: "Сколько стоит приобретение лицензии на оружие?", options: ["5000 $","10000 $","15000 $","Бесплатно для донатеров"], correct: 1 },
+        { text: "Какая рация используется в полиции?", options: ["/r","/dep","/police","/radio 1"], correct: 0 },
+        { text: "Что можно получить за выполнение всех ежедневных квестов недели?", options: ["Редкий скин","АЗ коины","Опыт x2","Легендарный кейс"], correct: 3 },
+        { text: "Где находится легендарный босс \"Пустынный шакал\"?", options: ["В тоннелях","На военной базе","В казино","На кладбище"], correct: 1 },
+        { text: "Какой уникальный транспорт выпадает с ивента \"Гонка на выживание\"?", options: ["Гоночный болид","Броневик","Квадроцикл","Мотоцикл смерти"], correct: 1 },
+        { text: "Максимальное количество складов, которое может купить игрок?", options: ["1","2","3","5"], correct: 1 },
+        { text: "Как называется ограбление ювелирного магазина?", options: ["Jewelry Heist","Golden Rush","Diamond Storm","Vice Theft"], correct: 0 },
+        { text: "Какой уровень нужен для торговли на черном рынке?", options: ["10","20","30","40"], correct: 2 },
+        { text: "Что восстанавливает аптечка (id 203)?", options: ["50 HP","75 HP","100 HP","25 HP"], correct: 2 },
+        { text: "Как часто проходят официальные гонки на вылет?", options: ["Каждые 2 часа","Каждые 4 часа","Каждые 6 часов","Раз в день"], correct: 1 },
+        { text: "Какую команду нужно ввести чтобы сесть на пассажирское сиденье?", options: ["/pass","/seat","/enterpass","/getin"], correct: 0 },
+        { text: "Какой максимальный бонус к опыту даёт премиум-статус?", options: ["+25%","+50%","+75%","+100%"], correct: 1 }
+    ];
+    const ARIZONA_V3_PART2 = [
+        { text: "Команда для создания своей банды (полная)", correctAnswer: "/creategang" },
+        { text: "Какой предмет восстанавливает броню (id)?", correctAnswer: "204" },
+        { text: "Название самого дешёвого оружия в магазине (англ)", correctAnswer: "pistol" },
+        { text: "Сумма штрафа за превышение скорости в Vice City (число)", correctAnswer: "500" },
+        { text: "Название ивента с зомби по ночам", correctAnswer: "zombie night" }
+    ];
+
+    // Объединяем варианты
+    const ARIZONA_VARIANTS = [
+        { part1: ARIZONA_V1_PART1, part2: ARIZONA_V1_PART2, name: "Классический" },
+        { part1: ARIZONA_V2_PART1, part2: ARIZONA_V2_PART2, name: "Криминальный" },
+        { part1: ARIZONA_V3_PART1, part2: ARIZONA_V3_PART2, name: "Экстремальный" }
+    ];
+
+    // ========== НОВЫЙ ЭКЗАМЕН ПО БОРЗОЛОГИИ (прототип) ==========
+    const BORZ_NEW_PART1 = [
+        { text: "Вы зашли в лифт, а ваш сосед, которого вы не выносите, уже там. Ваше действие, достойное борзого:", options: ["Вежливо кивнуть","Нажать «Стоп» и сказать: «А теперь поговорим, Вадим. Твоя собака гадит на коврик»","Делать вид, что говорите по телефону","Выйти и подождать следующий"], correct: 1 },
+        { text: "В кофейне бариста перепутал заказ. Борзый пост-эффект:", options: ["Поблагодарить","Потребовать новый и забрать ошибочный «в качестве компенсации»","Громко объяснять всем, как бариста ненавидит свою работу","Написать жалобу с фото пустого стакана"], correct: 1 },
+        { text: "Коллега попросил скинуть презентацию. Борзый ответ:", options: ["«Да, конечно»","Скинуть скриншот рабочего стола и написать: «Ищи сам, там она где-то есть»","Ответить голосовым на 2 минуты","Поставить дедлайн через 3 дня"], correct: 1 },
+        { text: "Соседка жалуется на шум после 23:00. Борзый ответ:", options: ["Извиниться","«У меня справка от врача: я должен слушать рэп громко из-за тиннитуса»","Предложить купить беруши","Выйти из чата"], correct: 1 },
+        { text: "На корпоративе конкурс с призом — чайник. Ваш ход:", options: ["Поддержать коллегу","«У меня история интереснее: я сегодня штаны надел левой ногой, давайте чайник мне»","Перебить историю коллеги своей","Украсть чайник"], correct: 2 },
+        { text: "В фитнес-клубе тренажёр занят отдыхающим по 5 минут:", options: ["Спросить сколько подходов","Встать и смотреть в упор","Сесть на тренажёр сверху и сказать: «Совместное использование — тренд 2026»","Попросить тренера"], correct: 2 },
+        { text: "Менеджер банка предлагает страховку. Борзый ответ:", options: ["«У меня уже есть»","«Я застрахован от страховок высшими силами. Передайте боссу, что он тоже»","«Я за рулём бетономешалки»","Положить трубку и перезвонить"], correct: 1 },
+        { text: "В столовой положили меньше гарнира:", options: ["Промолчать","Переложить половину из тарелки соседа: «Ты же худеешь?»","Крикнуть «Дискриминация!»","Угостить соседа котлетой"], correct: 1 },
+        { text: "Курьер доставил на час раньше:", options: ["«Спущусь через 10»","«Я охранник, вашего клиента нет, оставьте мне как вещдок»","«Отмените, я на совещании»","Взять заказ и написать: «Вы бы видели свои глаза»"], correct: 1 },
+        { text: "Свекровь: «Ты плохо влияешь» — борзый пас:", options: ["Обещать исправиться","Включить диктофон: «Повторите в камеру, мы собираем материал для тиктока»","«А вы хорошо влияете на моё давление»","Прислать ссылку «Токсичная свекровь»"], correct: 1 },
+        { text: "В зоомагазине: «не кормите хомяка сырым картофелем». Борзый возврат:", options: ["«Понял»","Вернуться с мёртвым хомяком: «Умер от сырого картофеля, вы не предупредили»","Кормить тут же","Потребовать инструкцию"], correct: 1 },
+        { text: "Врач: «На что жалуетесь?»", options: ["Перечисляю симптомы","«На ваше плохое настроение. Выглядите уставшим, может вам к терапевту? А я пока посижу в вашем кресле»","«На жизнь. Выпишите счастье»","Молча показываю пальцем"], correct: 1 },
+        { text: "Друг прислал голосовое на 5 минут:", options: ["Прослушать и ответить","Прислать голосовое на 15 секунд: «Не слушал. Перескажи текстом, если не сложно»","Прислать ссылку на оплату","Ответить 💩"], correct: 1 },
+        { text: "Съели последний кусок торта именинницы:", options: ["Извиниться","Достать сухарь: «Вот символический компенс. Ты нереально дуешься»","Пообещать принести торт завтра","«Ты хотела похудеть — я помог»"], correct: 1 },
+        { text: "Очередь в туалет на заправке, впереди женщина с ребёнком:", options: ["Терпеливо ждать","Постучать: «Скорая уборка!»","«У меня диплом по задержке дыхания, я могу потерпеть. Но вам не советую»","Залезть в женский: «Гендер — конструкция»"], correct: 2 }
+    ];
+
+    const BORZ_NEW_PART2 = [
+        { text: "(Офис) Дедлайн, отчёта нет. Метод «Цифрового бегемота»:", options: ["«Ноутбук умер»","Отправить пустой документ «Отчёт_финал...», когда спросят «пусто», ответить: «Новый безбумажный формат. Там написано: Вы мне должны отпуск»","«Это подавленная агрессия, перенесём»","«Я ухожу в себя, вернусь через два дня»"], correct: 1 },
+        { text: "(Быт) Соседи снизу жалуются на топот. Запредельное решение:", options: ["«Я танцую степ, присоединяйтесь за 500 руб»","Подарить наушники с шумоподавлением: «Теперь вы слышите только музыку своей души. А моя душа топает»","Кидать записки про карму","Ползать на четвереньках 3 дня"], correct: 1 },
+        { text: "(Семья) «Ты меня не слушаешь!». Абсурдная борзота:", options: ["«Могу повторить всё с интонацией утки»","Достать блокнот с фразами за месяц: «В 18:03 сказано Вынеси ведро. Я не вынес. Это избирательное слушание — высший пилотаж»","Надеть наушники","«Слушаю, но не соглашаюсь. Записать на диктофон?»"], correct: 1 },
+        { text: "В машину кинули яблоко. Ваши действия:", options: ["Не обратить внимание","Выйти, наорать, написать заявление","Поговорить с родителями","Позвонить в полицию"], correct: 1 },
+        { text: "Футбол с другом Арифуллой. Как попросить пас?", options: ["Арифулла пас","Арифулла соизвольте передать мяч","АИФ ПАС","Дай пас"], correct: 2 }
+    ];
+
+    // ----- состояние -----
+    let gameState = {
+        stage: 'main',
+        currentExam: null,
+        currentQuestionIndex: 0,
+        scores: { arizona: null, borz: null },
+        examCompletedFirst: false,
+        firstExamName: null,
+        selectedSpecialtyForDesc: null,
+        currentArizonaVariant: null   // хранит выбранный вариант для текущей попытки
+    };
+    let currentQuestionsList = [];
+    let currentAnswersStore = [];
+
+    const rootEl = document.getElementById('gameRoot');
+
+    function render() {
+        if (gameState.stage === 'specialtyDesc' && gameState.selectedSpecialtyForDesc) {
+            renderSpecialtyDesc();
+            return;
+        }
+        if (gameState.stage === 'main') renderMainScreen();
+        else if (gameState.stage === 'chooseExam') renderExamChoice();
+        else if (gameState.stage === 'examActive') renderActiveExam();
+        else if (gameState.stage === 'examDone') renderExamDoneScreen();
+        else if (gameState.stage === 'secondExamActive') renderActiveExam();
+        else if (gameState.stage === 'finalResult') renderFinalResult();
+    }
+
+    function renderMainScreen() {
+        const specsHtml = SPECIALTIES.map((s, idx) => `<div class="spec-item" data-idx="${idx}"><span class="spec-name">${s.name}</span><span class="spec-score">${s.score} баллов</span></div>`).join('');
+        rootEl.innerHTML = `
+            <div class="hero"><h1>🏛️ ПГУАС</h1><p>Система честного поступления — нажми на специальность, чтобы узнать суть</p></div>
+            <div class="direction-card"><h3>🎯 Направления и проходные баллы</h3><div class="spec-list" id="specList">${specsHtml}</div></div>
+            <button class="btn-primary" id="startExamsBtn">🔥 ПОПРОБОВАТЬ СИЛЫ 🔥<br>сдать вступительные в ПГУАС</button>
+            <div class="info-badge">🧠 Экзамены без подсказок + рандомный вариант Аризоны!</div>
+            <footer>© ПГУАС — построй карьеру с нами</footer>
+        `;
+        document.querySelectorAll('.spec-item').forEach(el => {
+            el.addEventListener('click', (e) => {
+                const idx = parseInt(el.dataset.idx);
+                gameState.selectedSpecialtyForDesc = SPECIALTIES[idx];
+                gameState.stage = 'specialtyDesc';
+                render();
+            });
+        });
+        document.getElementById('startExamsBtn')?.addEventListener('click', () => {
+            gameState.stage = 'chooseExam';
+            render();
+        });
+    }
+
+    function renderSpecialtyDesc() {
+        const spec = gameState.selectedSpecialtyForDesc;
+        rootEl.innerHTML = `
+            <div class="hero"><h1>📖 Описание направления</h1><p>ПГУАС — магия профиля</p></div>
+            <div class="desc-page"><h2>${spec.name}</h2><p>${spec.description}</p></div>
+            <button class="btn-primary back-btn" id="backToMainBtn">← Назад к направлениям</button>
+        `;
+        document.getElementById('backToMainBtn')?.addEventListener('click', () => {
+            gameState.stage = 'main';
+            gameState.selectedSpecialtyForDesc = null;
+            render();
+        });
+    }
+
+    function renderExamChoice() {
+        rootEl.innerHTML = `
+            <div class="hero"><h1>📚 ВЫБОР ЭКЗАМЕНА</h1><p>Сначала сдай один — потом продолжишь</p></div>
+            <div class="exam-panel" style="display:flex; flex-direction:column; gap:14px;">
+                <button class="btn-primary" id="chooseArizona" style="background:#1976a5;">🌵 ЕГЭ по Аризонаведению (порог 25)<br><span style="font-size:0.7rem;">🎲 Случайный вариант вопросов</span></button>
+                <button class="btn-primary" id="chooseBorz" style="background:#2c6e8f;">🐺 ЕГЭ по Борзоведению (порог 30)</button>
+                <div class="info-badge">⚠️ После сдачи первого экзамена потребуется продолжить.</div>
+            </div>
+        `;
+        document.getElementById('chooseArizona')?.addEventListener('click', () => {
+            // Выбираем случайный вариант
+            const randomIdx = Math.floor(Math.random() * ARIZONA_VARIANTS.length);
+            gameState.currentArizonaVariant = ARIZONA_VARIANTS[randomIdx];
+            startExam('arizona');
+        });
+        document.getElementById('chooseBorz')?.addEventListener('click', () => startExam('borz'));
+    }
+
+    function startExam(examType) {
+        gameState.currentExam = examType;
+        gameState.currentQuestionIndex = 0;
+        if (examType === 'arizona') {
+            const variant = gameState.currentArizonaVariant;
+            const part1 = variant.part1;
+            const part2 = variant.part2;
+            currentQuestionsList = [
+                ...part1.map(q => ({ type: 'choice', data: q })),
+                ...part2.map(q => ({ type: 'text', data: q }))
+            ];
+        } else {
+            currentQuestionsList = [
+                ...BORZ_NEW_PART1.map(q => ({ type: 'choice', data: q })),
+                ...BORZ_NEW_PART2.map(q => ({ type: 'choice', data: q }))
+            ];
+        }
+        currentAnswersStore = new Array(currentQuestionsList.length).fill(null);
+        if (!gameState.examCompletedFirst) gameState.stage = 'examActive';
+        else gameState.stage = 'secondExamActive';
+        render();
+    }
+
+    function renderActiveExam() {
+        const idx = gameState.currentQuestionIndex;
+        if (idx >= currentQuestionsList.length) { finishCurrentExam(); return; }
+        const q = currentQuestionsList[idx];
+        let variantInfo = '';
+        if (gameState.currentExam === 'arizona' && gameState.currentArizonaVariant) {
+            variantInfo = `<div class="variant-badge">Вариант: ${gameState.currentArizonaVariant.name}</div>`;
+        }
+        let inner = `<div class="hero"><h3>${gameState.currentExam === 'arizona' ? '📖 Аризонаведение' : '🐺 Борзоведение'}</h3><p>Вопрос ${idx+1} / ${currentQuestionsList.length} • 5 баллов</p>${variantInfo}</div>`;
+        inner += `<div class="exam-panel"><div class="question-card"><div class="question-text">${q.data.text}</div>`;
+        
+        if (q.type === 'choice') {
+            inner += `<div class="options" id="optionsArea">`;
+            q.data.options.forEach((opt, i) => {
+                inner += `<label class="option"><input type="radio" name="qOption" value="${i}"> ${opt}</label>`;
+            });
+            inner += `</div><button class="next-exam-btn" id="submitAnswerBtn">Ответить</button>`;
+        } 
+        else if (q.type === 'text') {
+            inner += `<input type="text" id="textAnswer" class="text-answer" placeholder="Введите ответ..." autocomplete="off"><br>
+                      <button class="next-exam-btn" id="submitAnswerBtn">Ответить</button>`;
+        }
+        inner += `</div></div><div class="info-badge">🔒 Результат узнаешь после двух экзаменов</div>`;
+        rootEl.innerHTML = inner;
+        
+        const submitBtn = document.getElementById('submitAnswerBtn');
+        submitBtn?.addEventListener('click', () => {
+            let correctFlag = false;
+            if (q.type === 'choice') {
+                const selected = document.querySelector('input[name="qOption"]:checked');
+                if (selected) correctFlag = (parseInt(selected.value) === q.data.correct);
+                currentAnswersStore[idx] = { correct: correctFlag };
+            } 
+            else if (q.type === 'text') {
+                const inputVal = document.getElementById('textAnswer')?.value.trim().toLowerCase() || '';
+                const correctAns = q.data.correctAnswer.trim().toLowerCase();
+                correctFlag = (inputVal === correctAns);
+                currentAnswersStore[idx] = { correct: correctFlag };
+            }
+            gameState.currentQuestionIndex++;
+            render();
+        });
+    }
+
+    function finishCurrentExam() {
+        let total = currentAnswersStore.filter(a => a && a.correct === true).length * 5;
+        if (gameState.currentExam === 'arizona') gameState.scores.arizona = total;
+        else gameState.scores.borz = total;
+
+        if (!gameState.examCompletedFirst) {
+            gameState.examCompletedFirst = true;
+            gameState.firstExamName = gameState.currentExam;
+            gameState.stage = 'examDone';
+        } else {
+            gameState.secondExamName = gameState.currentExam;
+            gameState.stage = 'finalResult';
+        }
+        render();
+    }
+
+    function renderExamDoneScreen() {
+        const examName = gameState.currentExam === 'arizona' ? 'Аризонаведение' : 'Борзоведение';
+        const score = gameState.currentExam === 'arizona' ? gameState.scores.arizona : gameState.scores.borz;
+        rootEl.innerHTML = `
+            <div class="hero"><h1>✅ ЭКЗАМЕН СДАН</h1></div>
+            <div class="result-area">
+                📌 ${examName}: ${score} баллов<br>
+                🧩 Первый этап пройден. Теперь второй экзамен.
+            </div>
+            <button class="btn-primary" id="continueSecondBtn">ПРОДОЛЖИТЬ → второй экзамен</button>
+        `;
+        document.getElementById('continueSecondBtn')?.addEventListener('click', () => {
+            const remaining = (gameState.firstExamName === 'arizona') ? 'borz' : 'arizona';
+            if (remaining === 'arizona') {
+                // Для аризоны при втором проходе тоже случайный вариант (новый)
+                const randomIdx = Math.floor(Math.random() * ARIZONA_VARIANTS.length);
+                gameState.currentArizonaVariant = ARIZONA_VARIANTS[randomIdx];
+            }
+            startExam(remaining);
+        });
+    }
+
+    function renderFinalResult() {
+        const arizonaScore = gameState.scores.arizona ?? 0;
+        const borzScore = gameState.scores.borz ?? 0;
+        const sum = arizonaScore + borzScore;
+        const arizonaOk = arizonaScore >= 25;
+        const borzOk = borzScore >= 30;
+        
+        let admitSpecialty = null;
+        if (arizonaOk && borzOk) {
+            for (let spec of SPECIALTIES) {
+                if (sum >= spec.score) {
+                    if (!admitSpecialty || spec.score > admitSpecialty.score) admitSpecialty = spec;
+                }
+            }
+            if (!admitSpecialty && sum >= 120) admitSpecialty = SPECIALTIES.find(s => s.name.includes("Баранистика"));
+        }
+        
+        let verdictMsg = "";
+        if (arizonaOk && borzOk && admitSpecialty) {
+            verdictMsg = `<span style="color:#1f6d5e;">✅ ВЫ ПОСТУПИЛИ на "${admitSpecialty.name}", поздравляем! 🎉</span>`;
+        } 
+        else if (arizonaOk && borzOk && !admitSpecialty) {
+            verdictMsg = `<span style="color:#c67b2e;">⚠️ Молодец, но тебе закрыта дорога в ПГУАС. Тебя с распростертыми руками ждет СПТУ.</span>`;
+        }
+        else {
+            verdictMsg = `<span style="color:#bc3f2e;">❌ Неприемлемый результат! Вам отказано и в ПГУАС, и в СПТУ. Пороги не пройдены.</span>`;
+        }
+        
+        rootEl.innerHTML = `
+            <div class="hero"><h1>🏁 ИТОГИ ПОСТУПЛЕНИЯ</h1></div>
+            <div class="result-area">
+                🌵 Аризонаведение: ${arizonaScore} баллов (порог 25)<br>
+                🐺 Борзоведение: ${borzScore} баллов (порог 30)<br>
+                📊 СУММАРНО: ${sum} баллов<br><br>
+                ${verdictMsg}
+            </div>
+            <button class="btn-primary" id="restartGame">🔄 ПРОЙТИ ЗАНОВО</button>
+            <footer>ПГУАС — Твой путь в инженерию, дерзай!</footer>
+        `;
+        document.getElementById('restartGame')?.addEventListener('click', () => {
+            gameState = {
+                stage: 'main',
+                currentExam: null,
+                currentQuestionIndex: 0,
+                scores: { arizona: null, borz: null },
+                examCompletedFirst: false,
+                firstExamName: null,
+                secondExamName: null,
+                selectedSpecialtyForDesc: null,
+                currentArizonaVariant: null
+            };
+            currentQuestionsList = [];
+            currentAnswersStore = [];
+            render();
+        });
+    }
+    render();
+</script>
+</body>
+</html>
